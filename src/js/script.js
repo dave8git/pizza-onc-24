@@ -60,7 +60,6 @@ const select = {
       console.log('new Product', thisProduct);
       thisProduct.renderInMenu();
     }
-
     renderInMenu() {
       const thisProduct = this;
       /* generate HTML based on template */
@@ -72,6 +71,22 @@ const select = {
       const container = document.querySelector(select.containerOf.menu);
       /* add element to menu */
       container.appendChild(thisProduct.element);
+    }
+    initAccordion() {
+      const thisProduct = this; 
+      /* find the clickable triger (the element that should react to clicking) */
+      const clickableTrigger = ???  // <- tu usuzpełnić, znikną błędy w kodzie
+      /* START: add event listener to clicable trigger on event click */
+      clickableTrigger.addEventListener('click', function(event) {
+        /* prevent default action for event */
+
+        /* find active product (product that has active class) */
+
+        /* if there is active product and it's not thisProduct.element, remove class active from it */
+
+        /* toggle active class on thisProduct.element */ 
+      });
+
     }
   }
 
