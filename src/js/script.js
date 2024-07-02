@@ -59,6 +59,7 @@ const select = {
       thisProduct.data = data; 
       console.log('new Product', thisProduct);
       thisProduct.renderInMenu();
+      thisProduct.initAccordion();
     }
     renderInMenu() {
       const thisProduct = this;
@@ -75,16 +76,26 @@ const select = {
     initAccordion() {
       const thisProduct = this; 
       /* find the clickable triger (the element that should react to clicking) */
-      const clickableTrigger = ???  // <- tu usuzpełnić, znikną błędy w kodzie
-      /* START: add event listener to clicable trigger on event click */
+      const clickableTrigger =   thisProduct.element.querySelector(select.menuProduct.clickable); 
       clickableTrigger.addEventListener('click', function(event) {
         /* prevent default action for event */
-
+        console.log('clicknięty');
+        event.preventDefault();
         /* find active product (product that has active class) */
-
+        const activeProduct = document.querySelector(classNames.menuProduct.wrapperActive);
+       
         /* if there is active product and it's not thisProduct.element, remove class active from it */
-
+        // if(activeProduct !== thisProduct.element) {
+        //   thisProduct.element.classList.remove(classNames.menuProduct.wrapperActive);
+        // }
+         
+     
         /* toggle active class on thisProduct.element */ 
+         if(activeProduct && activeProduct != thisProduct.element) {
+          activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
+        };
+
+        thisProduct.element.classList.toggle('active');
       });
 
     }
