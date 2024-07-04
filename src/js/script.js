@@ -57,47 +57,61 @@ const select = {
       const thisProduct = this; 
       thisProduct.id = id;
       thisProduct.data = data; 
-      console.log('new Product', thisProduct);
+      //console.log('new Product', thisProduct);
       thisProduct.renderInMenu();
+      thisProduct.getElements();
       thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder(); 
+      console.log(thisProduct);
     }
     renderInMenu() {
       const thisProduct = this;
-      /* generate HTML based on template */
       const generatedHTML = templates.menuProduct(thisProduct.data);
-
-      /* create element using utils.createElementFromHTML */
       thisProduct.element = utils.createDOMFromHTML(generatedHTML);
-      /* find menu container */
       const container = document.querySelector(select.containerOf.menu);
-      /* add element to menu */
       container.appendChild(thisProduct.element);
+    }
+
+    getElements() {
+      const thisProduct = this; 
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable); 
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form); 
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs); 
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton); 
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
     }
     initAccordion() {
       const thisProduct = this; 
-      /* find the clickable triger (the element that should react to clicking) */
-      const clickableTrigger =   thisProduct.element.querySelector(select.menuProduct.clickable); 
-      clickableTrigger.addEventListener('click', function(event) {
-        /* prevent default action for event */
-        console.log('clicknięty');
+      //const clickableTrigger =   thisProduct.element.querySelector(select.menuProduct.clickable); 
+      thisProduct.accordionTrigger.addEventListener('click', function(event) {
         event.preventDefault();
-        /* find active product (product that has active class) */
         const activeProduct = document.querySelector(classNames.menuProduct.wrapperActive);
-       
-        /* if there is active product and it's not thisProduct.element, remove class active from it */
-        // if(activeProduct !== thisProduct.element) {
-        //   thisProduct.element.classList.remove(classNames.menuProduct.wrapperActive);
-        // }
-         
-     
-        /* toggle active class on thisProduct.element */ 
          if(activeProduct && activeProduct != thisProduct.element) {
           activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
-        };
-
+        }
         thisProduct.element.classList.toggle('active');
       });
-
+    }
+    initOrderForm(){
+      const thisProduct = this; 
+      thisProduct.form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        thisProduct.processOrder(); 
+      });
+      for(let input of thisProduct.formInputs) {
+        input.addEventListener('change', function() {
+          thisProduct.processOrder(); 
+        });
+      }
+      thisProduct.cartButton.addEventListener('click', function(event) {
+        event.preventDefault(); 
+        thisProduct.processOrder(); 
+      });
+    }
+    processOrder() {
+      const thisProduct = this;
+      console.log('processOrder');
     }
   }
 
@@ -107,7 +121,7 @@ const select = {
     initMenu: function(){
       const thisApp = this;
 
-      console.log('thisApp.data:', thisApp.data); // thisApp.data pochodzi oczywiście z funkcji initData
+      //console.log('thisApp.data:', thisApp.data); // thisApp.data pochodzi oczywiście z funkcji initData
       
       for (let productName in thisApp.data.products) {
         new Product(productName, thisApp.data.products[productName]);
@@ -122,11 +136,11 @@ const select = {
 
     init: function(){
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
+      // console.log('*** App starting ***');
+      // console.log('thisApp:', thisApp);
+      // console.log('classNames:', classNames);
+      // console.log('settings:', settings);
+      // console.log('templates:', templates);
 
       thisApp.initData();
       thisApp.initMenu(); 
@@ -135,3 +149,4 @@ const select = {
 
   app.init();
 }
+
