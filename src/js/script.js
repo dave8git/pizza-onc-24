@@ -1,4 +1,4 @@
-/* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
+/* global Handlebars, utils, dataSource, settings */ // eslint-disable-line no-unused-vars
 
 {
   'use strict';
@@ -40,13 +40,13 @@ const select = {
     },
   };
 
-  const settings = {
+  const settings = { // eslint-disable-line no-unused-vars
     amountWidget: {
       defaultValue: 1,
       defaultMin: 0,
       defaultMax: 10,
     }
-  };
+  }; // eslint-disable-line no-unused-vars
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
@@ -110,8 +110,21 @@ const select = {
       });
     }
     processOrder() {
-      const thisProduct = this;
-      console.log('processOrder');
+      const thisProduct = this; // eslint-disable-line no-unused-vars
+      console.log('thisProduct.form', thisProduct.form);
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      console.log('formData', formData);
+
+      let price = thisProduct.data.price; 
+      for(let paramId in thisProduct.data.params) {
+        console.log('paramId', paramId);
+        const param = thisProduct.data.params[paramId];
+        console.log('param', param);
+        for(let optionId in param.options) {
+          const option = param.options[optionId];
+        }
+      }
+      thisProduct.priceElem.innerHTML = price;
     }
   }
 
