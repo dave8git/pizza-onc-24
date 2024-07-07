@@ -80,6 +80,7 @@ const select = {
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs); 
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton); 
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
     initAccordion() {
       const thisProduct = this; 
@@ -111,17 +112,40 @@ const select = {
     }
     processOrder() {
       const thisProduct = this; // eslint-disable-line no-unused-vars
-      console.log('thisProduct.form', thisProduct.form);
       const formData = utils.serializeFormToObject(thisProduct.form);
-      console.log('formData', formData);
-
+      
       let price = thisProduct.data.price; 
       for(let paramId in thisProduct.data.params) {
-        console.log('paramId', paramId);
         const param = thisProduct.data.params[paramId];
-        console.log('param', param);
         for(let optionId in param.options) {
           const option = param.options[optionId];
+          if(formData[paramId] && formData[paramId].includes(optionId)) {
+          
+            //thisProduct.imageWrapper.classList.add(``)
+            if(!option.default) {
+              price += option.price;
+              const foundElement = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
+            
+              if(foundElement) {
+                foundElement.classList.add('active');
+              }
+            } else {
+              const foundElement = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
+              if(foundElement) {
+                foundElement.classList.add('active');
+              }
+              
+            }
+          } else {
+            if(option.default) {
+              price -= option.price;
+             
+            }
+            const foundElement = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
+              if(foundElement) {
+                foundElement.classList.remove('active');
+              }
+          }
         }
       }
       thisProduct.priceElem.innerHTML = price;
