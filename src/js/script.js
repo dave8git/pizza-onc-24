@@ -120,31 +120,22 @@ const select = {
         for(let optionId in param.options) {
           const option = param.options[optionId];
           if(formData[paramId] && formData[paramId].includes(optionId)) {
-          
-            //thisProduct.imageWrapper.classList.add(``)
+            const foundElement = thisProduct.element.querySelector(`.${paramId}-${optionId}`);
+            if(foundElement) {
+              foundElement.classList.add('active');
+            }
             if(!option.default) {
               price += option.price;
-              const foundElement = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
-            
-              if(foundElement) {
-                foundElement.classList.add('active');
-              }
-            } else {
-              const foundElement = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
-              if(foundElement) {
-                foundElement.classList.add('active');
-              }
-              
-            }
+            } 
           } else {
+            const foundElement = thisProduct.element.querySelector(`.${paramId}-${optionId}`);
+            if(foundElement) {
+              foundElement.classList.remove('active');
+            }
             if(option.default) {
               price -= option.price;
-             
+           
             }
-            const foundElement = thisProduct.imageWrapper.querySelector(`.${paramId}-${optionId}`);
-              if(foundElement) {
-                foundElement.classList.remove('active');
-              }
           }
         }
       }
@@ -152,7 +143,14 @@ const select = {
     }
   }
 
+  class AmountWidget {
+    constructor(element) {
+      const thisWidget = this; 
 
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments:', element);
+    }
+  }
   const app = {
 
     initMenu: function(){
