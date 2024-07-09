@@ -153,7 +153,10 @@ const select = {
   class AmountWidget {
     constructor(element) {
       const thisWidget = this; 
-      thisWidget.element = element;
+      
+      thisWidget.getElements(element);
+      thisWidget.setValue(thisWidget.input.value); 
+      thisWidget.initActions();
       console.log('thisWidget.element from AmountWidget', thisWidget.element);
       console.log('AmountWidget:', thisWidget);
       console.log('constructor arguments:', element);
@@ -165,6 +168,42 @@ const select = {
       thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
       thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
       thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    }
+
+    initActions() {
+      const thisWidget = this; 
+  
+      // Logging the elements to ensure they are correctly selected
+      console.log('linkIncrease:', thisWidget.linkIncrease);
+      console.log('linkDecrease:', thisWidget.linkDecrease);
+  
+      thisWidget.input.addEventListener('change', function() {
+        thisWidget.setValue(thisWidget.input.value);
+      });
+  
+      thisWidget.linkDecrease.addEventListener('click', function() {
+        console.log('linkDecrease');
+        thisWidget.setValue(thisWidget.value - 1);
+      });
+  
+      thisWidget.linkIncrease.addEventListener('click', function() {
+        console.log('linkIncrease');
+        thisWidget.setValue(thisWidget.value + 1);
+      });
+    }
+
+    setValue(value) {
+      const thisWidget = this; 
+
+      const newValue = parseInt(value);
+      console.log('newValue', newValue);
+      /* TODO: Add validation */
+      if(thisWidget.value !== newValue && !isNaN(newValue) && newValue <= settings.amountWidget.defaultMax && newValue >= settings.amountWidget.defaultMin) {
+        thisWidget.value = newValue;
+      }
+      thisWidget.input.value = thisWidget.value; // musi być poza ifem, żeby w przypadku wpisania nieprawidłowej wartości od razu zmieniała się wartość  na właściwą
+      // gdyby było w warunku oczywiście trzeba by było kliknąć dwa razy aby pobrała się odpowiednia wartość i dopiero przeszło dalej
+      // nie działał by też enter po wyjściu z inputu, wartość i tak by zostawała. 
     }
   }
   const app = {
