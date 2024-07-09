@@ -141,12 +141,14 @@ const select = {
           }
         }
       }
+      price *= thisProduct.amountWidget.value;
       thisProduct.priceElem.innerHTML = price;
     }
     initAmountWidget() {
       const thisProduct = this; 
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+      thisProduct.amountWidgetElem.addEventListener('updated', () => thisProduct.processOrder()); // element html oczywiście będzie nasłuchiwał, nie instancja klasy AmountWidget
     }
   }
 
@@ -200,6 +202,8 @@ const select = {
       /* TODO: Add validation */
       if(thisWidget.value !== newValue && !isNaN(newValue) && newValue <= settings.amountWidget.defaultMax && newValue >= settings.amountWidget.defaultMin) {
         thisWidget.value = newValue;
+        const event = new Event('updated');
+        thisWidget.element.dispatchEvent(event);
       }
       thisWidget.input.value = thisWidget.value; // musi być poza ifem, żeby w przypadku wpisania nieprawidłowej wartości od razu zmieniała się wartość  na właściwą
       // gdyby było w warunku oczywiście trzeba by było kliknąć dwa razy aby pobrała się odpowiednia wartość i dopiero przeszło dalej
