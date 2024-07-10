@@ -103,19 +103,19 @@ const select = {
 
     getElements() {
       const thisProduct = this; 
-      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable); 
-      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form); 
-      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs); 
-      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton); 
-      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
-      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
-      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
-      console.log('thisProduct.amountWidgetElem', thisProduct.amountWidgetElem);
+      thisProduct.dom = {};
+      thisProduct.dom.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable); 
+      thisProduct.dom.form = thisProduct.element.querySelector(select.menuProduct.form); 
+      thisProduct.dom.formInputs = thisProduct.dom.form.querySelectorAll(select.all.formInputs); 
+      thisProduct.dom.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton); 
+      thisProduct.dom.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.dom.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.dom.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
     }
     initAccordion() {
       const thisProduct = this; 
       //const clickableTrigger =   thisProduct.element.querySelector(select.menuProduct.clickable); 
-      thisProduct.accordionTrigger.addEventListener('click', function(event) {
+      thisProduct.dom.accordionTrigger.addEventListener('click', function(event) {
         event.preventDefault();
         const activeProduct = document.querySelector(classNames.menuProduct.wrapperActive);
          if(activeProduct && activeProduct != thisProduct.element) {
@@ -126,23 +126,23 @@ const select = {
     }
     initOrderForm(){
       const thisProduct = this; 
-      thisProduct.form.addEventListener('submit', function(event) {
+      thisProduct.dom.form.addEventListener('submit', function(event) {
         event.preventDefault();
         thisProduct.processOrder(); 
       });
-      for(let input of thisProduct.formInputs) {
+      for(let input of thisProduct.dom.formInputs) {
         input.addEventListener('change', function() {
           thisProduct.processOrder(); 
         });
       }
-      thisProduct.cartButton.addEventListener('click', function(event) {
+      thisProduct.dom.cartButton.addEventListener('click', function(event) {
         event.preventDefault(); 
         thisProduct.processOrder(); 
       });
     }
     processOrder() {
       const thisProduct = this; // eslint-disable-line no-unused-vars
-      const formData = utils.serializeFormToObject(thisProduct.form);
+      const formData = utils.serializeFormToObject(thisProduct.dom.form);
       
       let price = thisProduct.data.price; 
       for(let paramId in thisProduct.data.params) {
@@ -170,13 +170,13 @@ const select = {
         }
       }
       price *= thisProduct.amountWidget.value;
-      thisProduct.priceElem.innerHTML = price;
+      thisProduct.dom.priceElem.innerHTML = price;
     }
     initAmountWidget() {
       const thisProduct = this; 
 
-      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
-      thisProduct.amountWidgetElem.addEventListener('updated', () => thisProduct.processOrder()); // element html oczywiście będzie nasłuchiwał, nie instancja klasy AmountWidget
+      thisProduct.amountWidget = new AmountWidget(thisProduct.dom.amountWidgetElem);
+      thisProduct.dom.amountWidgetElem.addEventListener('updated', () => thisProduct.processOrder()); // element html oczywiście będzie nasłuchiwał, nie instancja klasy AmountWidget
     }
   }
 
@@ -237,6 +237,25 @@ const select = {
       thisWidget.input.value = thisWidget.value; // musi być poza ifem, żeby w przypadku wpisania nieprawidłowej wartości od razu zmieniała się wartość  na właściwą
       // gdyby było w warunku oczywiście trzeba by było kliknąć dwa razy aby pobrała się odpowiednia wartość i dopiero przeszło dalej
       // nie działał by też enter po wyjściu z inputu, wartość i tak by zostawała. 
+    }
+  }
+
+  class Cart {
+    constructor(element) {
+      const thisCart = this; 
+      thisCart.products = [];
+
+      thisCart.getElements(element);
+
+      console.log('new Cart', thisCart);
+    }
+
+    getElements(element) {
+      const thisCart = this; 
+
+      thisCart.dom = {};
+
+      thisCart.dom.wrapper = element; 
     }
   }
   const app = {
