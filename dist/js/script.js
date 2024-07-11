@@ -91,6 +91,7 @@ const select = {
       thisProduct.initOrderForm();
       thisProduct.initAmountWidget(); 
       thisProduct.processOrder(); 
+      thisProduct.prepareCartProduct();
       console.log(thisProduct);
     }
     renderInMenu() {
@@ -138,6 +139,7 @@ const select = {
       thisProduct.dom.cartButton.addEventListener('click', function(event) {
         event.preventDefault(); 
         thisProduct.processOrder(); 
+        thisProduct.addToCart();
       });
     }
     processOrder() {
@@ -171,12 +173,60 @@ const select = {
       }
       price *= thisProduct.amountWidget.value;
       thisProduct.dom.priceElem.innerHTML = price;
+      thisProduct.price = price;
+      thisProduct.prepareCartProduct();
     }
     initAmountWidget() {
       const thisProduct = this; 
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.dom.amountWidgetElem);
       thisProduct.dom.amountWidgetElem.addEventListener('updated', () => thisProduct.processOrder()); // element html oczywiście będzie nasłuchiwał, nie instancja klasy AmountWidget
+    }
+
+    addToCart() {
+      const thisProduct = this; 
+
+      app.cart.add(thisProduct.prepareCartProduct()); //thisApp.cart = new Cart(cartElem); <-- w app zapisaliśmy nową instancję klasy Cart do thisApp.cart czyli tutaj możemy przeczytać jako app.cart (obiekt app, metoda cart)
+      // z racji tego, instancja klasy Product tworzona jest w obiekcie app, klasa/instancja Product może odwołać się do jej metod (app jest nadrzędnym obiektem)
+      // tutaj odwołuje się do metody add w klasie Cart (której instancja była zapisana w thisApp.cart), i przekazuje jej instancję klasy Product.
+    }
+
+    prepareCartProductParams() {
+      const thisProduct = this; 
+      const formData = utils.serializeFormToObject(thisProduct.dom.form);
+      const params = {};
+      for(let paramId in thisProduct.data.params) {
+        const param = thisProduct.data.params[paramId];
+        params[paramId] = {
+          label: param.label,
+          options: {},
+        }
+        for(let optionId in param.options) {
+          const option = param.options[optionId];
+          if(formData[paramId] && formData[paramId].includes(optionId)) {
+            params[paramId].options[optionId] = option.label;
+          } 
+        }
+      }
+  
+      return params;
+    }
+
+    prepareCartProduct() {
+      const thisProduct = this; 
+
+      const productSummary = {}; 
+      productSummary.id = thisProduct.id;
+      productSummary.name = thisProduct.data.name; 
+      productSummary.amount = thisProduct.amountWidget.value;
+      productSummary.priceSingle = thisProduct.data.price;
+      productSummary.price = thisProduct.price;
+      productSummary.params = thisProduct.prepareCartProductParams();
+
+      console.log('productSummary', productSummary);
+      console.log('thisProduct', thisProduct);
+
+      return productSummary;
     }
   }
 
@@ -269,6 +319,45 @@ const select = {
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
     }
+
+    add(menuProduct) { // thisProduct == menuProduct
+      const thisCart = this; 
+
+      console.log('adding product', menuProduct);
+      const generatedHTML = templates.cartProduct(menuProduct);
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+      //thisCart.dom.productList.appendChild(generatedDOM);
+      thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
+      console.log('thisCart.products', thisCart.products);
+
+    }
+  }
+
+  class CartProduct {
+    constructor(menuProduct, element) {
+      const thisCartProduct = this; 
+      thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.amount = menuProduct.amount;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.price = menuProduct.price; 
+      thisCartProduct.params = menuProduct.params; 
+
+      thisCartProduct.getElements(element);
+      console.log('thisCartProduct', thisCartProduct);
+    }
+
+    getElements(element) {
+      const thisCartProduct = this; 
+      thisCartProduct.dom = {};
+      thisCartProduct.dom.wrapper = element;
+      thisCartProduct.dom.amountWidget = element.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
+
+    }
+
   }
   const app = {
 
@@ -292,7 +381,7 @@ const select = {
       const thisApp = this; 
 
       const cartElem = document.querySelector(select.containerOf.cart);
-      thisApp.cart = new Cart(cartElem);
+      thisApp.cart = new Cart(cartElem); //tu zapisujemy instancję koszyka do app.cart
     },
 
     init: function(){
