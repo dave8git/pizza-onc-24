@@ -331,7 +331,23 @@ const select = {
       thisCart.dom.productList.appendChild(generatedDOM);
       thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
       console.log('thisCart.products', thisCart.products);
+      thisCart.update();
+    }
 
+    update() {
+      const thisCart = this; 
+      const deliveryFee = settings.cart.defaultDeliveryFee;
+      let totalNumber = 0;
+      let subtotalPrice = 0; 
+      for (let product of thisCart.products) {
+        console.log('!!!', product);
+        totalNumber += product.amount;
+        subtotalPrice += product.price;
+      }
+      console.log('totalNumber', totalNumber);
+      console.log('subtotalPrice', subtotalPrice);
+      thisCart.totalPrice = subtotalPrice + deliveryFee;
+      console.log('thisCart.totalPrice', thisCart.totalPrice);
     }
   }
 
