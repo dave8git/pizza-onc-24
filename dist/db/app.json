@@ -210,19 +210,12 @@
       "subtotalPrice": "9",
       "products": [
         {
-          "id": "breakfast",
+          "id": "cake",
           "amount": 1,
           "price": 9,
           "priceSingle": 9,
-          "name": "Zia Giulia's Breakfast",
-          "params": {
-            "coffee": {
-              "label": "Coffee type",
-              "options": {
-                "macchiato": "Macchiato "
-              }
-            }
-          }
+          "name": "Zio Stefano's Doughnut",
+          "params": {}
         }
       ],
       "id": 1
@@ -234,46 +227,15 @@
       "subtotalPrice": "9",
       "products": [
         {
-          "id": "breakfast",
+          "id": "cake",
           "amount": 1,
           "price": 9,
           "priceSingle": 9,
-          "name": "Zia Giulia's Breakfast",
-          "params": {
-            "coffee": {
-              "label": "Coffee type",
-              "options": {
-                "macchiato": "Macchiato "
-              }
-            }
-          }
+          "name": "Zio Stefano's Doughnut",
+          "params": {}
         }
       ],
       "id": 2
-    },
-    {
-      "address": "",
-      "phone": "",
-      "totalPrice": "38",
-      "subtotalPrice": "18",
-      "products": [
-        {
-          "id": "breakfast",
-          "amount": 2,
-          "price": 18,
-          "priceSingle": 9,
-          "name": "Zia Giulia's Breakfast",
-          "params": {
-            "coffee": {
-              "label": "Coffee type",
-              "options": {
-                "macchiato": "Macchiato "
-              }
-            }
-          }
-        }
-      ],
-      "id": 3
     }
   ]
 }
