@@ -348,11 +348,37 @@ const select = {
         deliveryFee: select.cart.deliveryFee.innerHTML,
         products: []
       }
-
+      // console.log('thisCart.dom.totalNumber', thisCart.dom.totalNumber);
+      console.log('!!!!', thisCart.dom.totalNumber);
+      for(let prod of thisCart.products) {
+        payload.products.push(prod.getData());
+        console.log('prod', prod);
+      }
       console.log('payload', payload);
 
       const url = settings.db.url + '/' + settings.db.orders;
 
+      // fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(payload)
+      // });
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      };
+      fetch(url, options)
+        .then(function(response){
+          return response.json(); 
+        }).then(function(parsedResponse){
+          console.log('parsedResponse', parsedResponse);
+        });
     }
 
     remove(cartProduct) {
@@ -403,7 +429,6 @@ const select = {
       thisCartProduct.getElements(element);
       thisCartProduct.initAmountWidget();
       thisCartProduct.initActions();
- 
     }
 
     getElements(element) {
@@ -448,8 +473,20 @@ const select = {
       });
       thisCartProduct.dom.wrapper.dispatchEvent(event);
     }
-    
-   
+    getData() {
+      const thisCartProduct = this; 
+      const data = {
+        id: thisCartProduct.id,
+        amount: thisCartProduct.amount,
+        price: thisCartProduct.price,
+        priceSingle: thisCartProduct.priceSingle,
+        name: thisCartProduct.name,
+        params: thisCartProduct.params,
+      }
+
+      console.log('thisCartProduct', thisCartProduct);
+      return data;
+    }
   }
   const app = {
 
