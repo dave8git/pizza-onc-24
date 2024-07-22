@@ -113,6 +113,8 @@ import Booking from './components/Booking.js';
 
     const widgetContainer = document.querySelector(select.containerOf.booking);
     const booking = new Booking(widgetContainer);
+
+    console.log('widgetContainer', widgetContainer);
   },
 
   init: function () {
