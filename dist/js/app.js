@@ -2,6 +2,7 @@
 import {settings, select, classNames} from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
+import Booking from './components/Booking.js';
 
   const app = {
   initPages: function() {
@@ -18,7 +19,9 @@ import Cart from './components/Cart.js';
 
     for(let page of thisApp.pages) {
       if(page.id == idFromHash) {
+  // eslint-disable-next-line no-unused-vars
         pageMatchingHash = page.id;
+        console.log(pageMatchingHash);
         break; // dzięki break nie zostaną wykonane dalsze pętle jeżeli warunek będzie prawidziwy. 
       }
     }
@@ -105,6 +108,13 @@ import Cart from './components/Cart.js';
     });
   },
 
+  initBooking: function () {
+    const thisApp = this; 
+
+    const widgetContainer = document.querySelector(select.containerOf.booking);
+    const booking = new Booking(widgetContainer);
+  },
+
   init: function () {
     const thisApp = this;
     // console.log('*** App starting ***');
@@ -116,6 +126,7 @@ import Cart from './components/Cart.js';
     thisApp.initData();
     thisApp.initMenu();
     thisApp.initCart();
+    thisApp.initBooking(); 
   },
 };
 
