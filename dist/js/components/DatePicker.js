@@ -1,6 +1,7 @@
 import BaseWidget from '../components/BaseWidget.js';
-import utils from '../utils.js';
+import {utils} from '../utils.js';
 import {select, settings} from '../settings.js';
+// import flatpickr from "flatpickr"; // nie trzeba importu bo jest zaimportowane z CDN globalnie
 
 class DatePicker extends BaseWidget{
   constructor(wrapper){
