@@ -1,60 +1,59 @@
 import {select, settings} from '../settings.js';
+import BaseWidget from './BaseWidget.js';
 
-class AmountWidget {
+class AmountWidget extends BaseWidget{
     constructor(element) {
+      super(element, settings.amountWidget.defaultValue); 
       const thisWidget = this; 
       
       thisWidget.getElements(element);
-      thisWidget.setValue(thisWidget.input.value); 
+      thisWidget.setValue(thisWidget.dom.input.value); 
       thisWidget.initActions();
+
+      console.log('AmountWidget:', thisWidget);
     }
 
     getElements(element) {
       const thisWidget = this; 
-      thisWidget.element = element; 
-      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
-      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
-      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+      thisWidget.dom.wrapper = element; 
+      thisWidget.dom.input = thisWidget.dom.wrapper.querySelector(select.widgets.amount.input);
+      thisWidget.dom.linkDecrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.dom.linkIncrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkIncrease);
     }
 
     initActions() {
       const thisWidget = this; 
   
       // Logging the elements to ensure they are correctly selected
-      thisWidget.input.addEventListener('change', function() {
-        thisWidget.setValue(thisWidget.input.value);
+      thisWidget.dom.input.addEventListener('change', function() {
+        thisWidget.value = thisWidget.dom.input.value;
       });
   
-      thisWidget.linkDecrease.addEventListener('click', function() {
+      thisWidget.dom.linkDecrease.addEventListener('click', function() {
         thisWidget.setValue(thisWidget.value - 1);
       });
   
-      thisWidget.linkIncrease.addEventListener('click', function() {
+      thisWidget.dom.linkIncrease.addEventListener('click', function() {
         thisWidget.setValue(thisWidget.value + 1);
       });
     }
 
-    setValue(value) {
+  
+
+    parseValue(value){
+      return parseInt(value);
+    }
+
+    isValid(value) {
+      return !isNaN(value) 
+      && value <= settings.amountWidget.defaultMax 
+      && value >= settings.amountWidget.defaultMin;
+    }
+
+    renderValue() {
       const thisWidget = this; 
 
-      const newValue = parseInt(value);
-      /* TODO: Add validation */
-      if(thisWidget.value !== newValue && !isNaN(newValue) && newValue <= settings.amountWidget.defaultMax && newValue >= settings.amountWidget.defaultMin) {
-        thisWidget.value = newValue;
-        const event = new Event('updated');
-        thisWidget.element.dispatchEvent(event);
-        thisWidget.announce();
-      }
-      thisWidget.input.value = thisWidget.value; // musi być poza ifem, żeby w przypadku wpisania nieprawidłowej wartości od razu zmieniała się wartość  na właściwą
-      // gdyby było w warunku oczywiście trzeba by było kliknąć dwa razy aby pobrała się odpowiednia wartość i dopiero przeszło dalej
-      // nie działał by też enter po wyjściu z inputu, wartość i tak by zostawała. 
-    }
-    announce() {
-      const thisWidget = this; 
-      const event = new Event('updated', {
-        bubbles: true
-      });
-      thisWidget.element.dispatchEvent(event);
+      thisWidget.dom.input.value = thisWidget.value; 
     }
   }
 
