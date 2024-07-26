@@ -109,11 +109,11 @@ import Booking from './components/Booking.js';
   },
 
   initBooking: function () {
-    const thisApp = this; 
+    // const thisApp = this; 
 
     const widgetContainer = document.querySelector(select.containerOf.booking);
     const booking = new Booking(widgetContainer);
-
+    console.log(booking);
     console.log('widgetContainer', widgetContainer);
   },
 
