@@ -7,6 +7,7 @@ import HourPicker from './HourPicker.js';
 class Booking {
     constructor(element) {
         const thisBooking = this; 
+        thisBooking.tableNo;
 
         thisBooking.render(element);
         thisBooking.initWidget(); 
@@ -166,7 +167,8 @@ class Booking {
         thisBooking.dom.datePicker = thisBooking.dom.wrapper.querySelector(select.widgets.datePicker.wrapper);
         thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
         thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
-
+        thisBooking.dom.tablesContainer = thisBooking.dom.wrapper.querySelector(select.booking.tablesContainer);
+        console.log('thisBooking.dom.tablesContainer', thisBooking.dom.tablesContainer);
     }
 
 
@@ -189,6 +191,38 @@ class Booking {
         thisBooking.dom.wrapper.addEventListener('updated', function(){
             thisBooking.updateDOM();
         });
+
+        thisBooking.dom.tablesContainer.addEventListener('click', function (e) {
+            thisBooking.initTables(e); 
+        });
+    }
+
+    initTables(event) {
+        const thisBooking = this;
+        
+        const clickedElement = event.target; 
+        const tableNo = clickedElement.getAttribute('data-table');
+
+        if (!tableNo) {
+            return; // wyskocz z funkcji
+        } 
+        
+        if(clickedElement.classList.contains(classNames.booking.tableBooked)) { //jeżeli nie jest stolikiem (nie ma klasy table) lub stolik ma klasę booked
+            return;
+        }
+
+        const tableSelected = event.target.classList.contains(classNames.booking.tableSelected);
+        
+        if(tableSelected) {
+            clickedElement.classList.remove(classNames.booking.tableSelected);
+            thisBooking.tableNo = null;
+        } else {
+            const tables = thisBooking.dom.tablesContainer.querySelectorAll(select.booking.tables);
+            tables.forEach(table => table.classList.remove(classNames.booking.tableSelected));
+            clickedElement.classList.add(classNames.booking.tableSelected);
+            thisBooking.tableNo = tableNo;
+        }
+
     }
 }
 
